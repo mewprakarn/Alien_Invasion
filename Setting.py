@@ -1,4 +1,10 @@
 class Setting:
     """A class to store setting for Alien Invasion Game."""
 
-    def __init__
+    def __init__(self):
+        """Initialize the game's setting"""
+        # Screen settings
+        self.screen_width = 1200
+        self.screen_height = 800
+        self.bg_color = (230,230,230)
+        
