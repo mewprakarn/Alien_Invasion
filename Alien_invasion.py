@@ -13,10 +13,10 @@ class AlienInvasion:
 
         self.settings = Setting()
         
-        #self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
-        self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
-        self.settings.screen_width = self.screen.get_rect().width
-        self.settings.screen_height = self.screen.get_rect().height
+        self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_height))
+        #self.screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
+        #self.settings.screen_width = self.screen.get_rect().width
+        #self.settings.screen_height = self.screen.get_rect().height
 
         pygame.display.set_caption("Alien_Invation")
         self.ship = Ship(self)
@@ -30,8 +30,24 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
-            self.bullets.update()
+            self._update_bullets()
             self._update_screen()
+
+            # Get rid of bullets that have disappeared.
+
+
+    def _update_bullets(self):
+        """Update postion of bullets and get rid of old bullets."""
+        # Update bullet position.
+        self.bullets.update()
+
+        # Get rid of bullets that have disappeared.
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+            print(len(self.bullets))
+
+
 
     def _check_events(self):
         """Respond to keypresses and mouse event."""
@@ -64,8 +80,9 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullet group."""
-        new_bullet = Bullet(self)
-        self.bullets.add(new_bullet)
+        if len(self.bullets) < self.settings.bullet_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
 
     def _update_screen(self):
         """Update image on the screen, and flip to new screen."""
